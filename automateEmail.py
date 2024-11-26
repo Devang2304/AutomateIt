@@ -5,6 +5,7 @@ from langchain_google_genai import GoogleGenerativeAI
 from dotenv import load_dotenv
 import pandas as pd
 import os
+import time
 load_dotenv()  
 
 
@@ -20,7 +21,10 @@ with open("Skills_Summary.txt", "r") as f:
 # print(f"Skills : {skills_summary}")
 
 def generate_personalised_paragraph(company_name):
-    prompt = f"Research the company {company_name} and Write a short personalized paragraph about how my skills align with {company_name}. Use the following skills: {skills_summary},Note: Not need to include every skills only include the skills that align with {company_name}'s values."
+    prompt = f"""Research the company {company_name} and, based on publicly available information or general assumptions, write a short personalized paragraph about how my skills align with {company_name}. Use the following skills: {skills_summary}. 
+If you cannot find specific details about the company, assume it is a forward-thinking tech company working on innovative projects in software development, AI/ML, and cloud technologies. Write the paragraph accordingly. 
+Focus on aligning the most relevant skills from the list with typical goals or values of a tech company, such as innovation, scalability, or efficiency.
+"""
 
     llm = GoogleGenerativeAI(model="gemini-1.5-flash",google_api_key=googleAPIkey)
     response = llm.invoke(prompt)
@@ -53,7 +57,7 @@ def send_email(sender_email,sender_name,recipient_email,subject,html_body,resume
 def automate_emails(csv_path,sender_email, sender_name, resume_path):
     data = pd.read_csv(csv_path)
 
-    for _, row in data.iterrows():
+    for index, row in data.iterrows():
         founder_name = row["Founder Name"]
         company_name = row["Company Name"]
         recipient_email = row["Founder Email"]
@@ -96,8 +100,12 @@ def automate_emails(csv_path,sender_email, sender_name, resume_path):
         </html>
         """
         print("Template created!")
-        send_email(sender_email, sender_name, recipient_email,f"Excited to Connect with {company_name}!",template,resume_path)
-
+        send_email(sender_email, sender_name, recipient_email,f"Application for SDE Intern Position at {company_name}",template,resume_path)
+        if index != len(data) - 1:  
+            print("Waiting for 4 minutes before sending the next email...")
+            time.sleep(240)  
+    
+    print("All emails sent successfully!")
 
 # csv_path = "data.csv"
 # resume_path = "/path/to/resume.pdf"
