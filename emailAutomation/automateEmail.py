@@ -15,14 +15,14 @@ phone = os.getenv("phone")
 password = os.getenv("password")
 
 
-with open("Skills_Summary.txt", "r") as f:
+with open("./Skills_Summary.txt", "r") as f:
     skills_summary = f.read()
 
 # print(f"Skills : {skills_summary}")
 
 def generate_personalised_paragraph(company_name):
     prompt = f"""Research the company {company_name} and, based on publicly available information or general assumptions, write a short personalized paragraph about how my skills align with {company_name}. Use the following skills: {skills_summary}. 
-If you cannot find specific details about the company, assume it is a forward-thinking tech company working on innovative projects in software development, AI/ML, and cloud technologies. Write the paragraph accordingly. 
+Only use this if you cannot find specific details about the company, assume it is a forward-thinking tech company working on innovative projects in software development, AI/ML, and cloud technologies. Write the paragraph accordingly. 
 Focus on aligning the most relevant skills from the list with typical goals or values of a tech company, such as innovation, scalability, or efficiency.
 """
 
@@ -67,7 +67,7 @@ def automate_emails(csv_path,sender_email, sender_name, resume_path):
         template = f"""
         <html>
             <body>
-                <p>Hi <b>{founder_name}</b>,</p>
+                <p>Hi {founder_name},</p>
 
                 <p>I hope you're doing well. I am writing to express my interest in the <b>SDE Intern</b> position at <b>{company_name}</b> for next 6 months. I have attached my updated resume for your review.</p>
 
@@ -102,8 +102,8 @@ def automate_emails(csv_path,sender_email, sender_name, resume_path):
         print("Template created!")
         send_email(sender_email, sender_name, recipient_email,f"Application for SDE Intern Position at {company_name}",template,resume_path)
         if index != len(data) - 1:  
-            print("Waiting for 4 minutes before sending the next email...")
-            time.sleep(240)  
+            print(f"Waiting for 2 minutes before sending the next email {index}...")
+            time.sleep(120)  
     
     print("All emails sent successfully!")
 
@@ -112,8 +112,8 @@ def automate_emails(csv_path,sender_email, sender_name, resume_path):
 # sender_email = "your_email@gmail.com"
 # sender_name = "Your Name"
 
-csv_path = "data.csv"
-resume_path = "../../MY RESUME_DEVANG/resume4/Devang_Vartak_resume.pdf"
+csv_path = "./data.csv"
+resume_path = "../../../MY RESUME_DEVANG/resume4/Devang_Vartak_resume.pdf"
 sender_email = ""
 sender_name = "Devang Vartak"
 
